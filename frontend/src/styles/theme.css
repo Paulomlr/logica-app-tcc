@@ -47,6 +47,14 @@ body {
   min-height: 100dvh;
 }
 
+.screen {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
 h1,
 h2,
 h3 {
@@ -68,6 +76,55 @@ button {
   border: none;
   background: none;
   cursor: pointer;
+}
+
+.btn {
+  font: inherit;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 14.5px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.btn-primary:hover {
+  background: var(--accent-strong);
+}
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  width: auto;
+  padding: 6px;
+}
+.hint {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.4;
 }
 
 :focus-visible {

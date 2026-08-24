@@ -1,0 +1,57 @@
+.splash {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 30px;
+  gap: 0;
+  position: relative;
+}
+
+.pwa-pill {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.splash-mark {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+}
+
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 42px;
+  letter-spacing: -0.02em;
+}
+.wordmark span {
+  color: var(--accent);
+}
+
+.splash .tagline {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 10px 0 46px;
+}
+
+.splash .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.google-icn {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}

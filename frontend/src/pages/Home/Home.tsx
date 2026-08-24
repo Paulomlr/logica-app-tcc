@@ -1,62 +1,68 @@
-import LogoMark from '../../components/LogoMark/LogoMark'
+import type { CSSProperties } from 'react'
+import {
+  LogoMark,
+  GearIcon,
+  ChevronRightIcon,
+  BarChartIcon,
+  FlameIcon,
+  StarIcon,
+  TrophyIcon,
+} from '../../components/icons/Icons'
 import './Home.css'
 
 const NAV_ITEMS = [
-  { icon: '📊', label: 'Progresso' },
-  { icon: '🔥', label: 'Sequência' },
-  { icon: '⭐', label: 'Conquistas' },
+  { Icon: BarChartIcon, label: 'Progresso', stat: '68%' },
+  { Icon: FlameIcon, label: 'Sequência', stat: '4 dias' },
+  { Icon: StarIcon, label: 'Conquistas', stat: '3/10' },
+  { Icon: TrophyIcon, label: 'Ranking', stat: '#3' },
 ]
 
 function Home() {
   return (
-    <main className="home">
+    <main className="screen home">
       <div className="home-topbar">
-        <LogoMark size="sm" />
-        <button type="button" className="icon-button" aria-label="Configurações">
-          ⚙
+        <LogoMark className="brand-mark-sm" />
+        <button type="button" className="gear-btn" aria-label="Configurações">
+          <GearIcon />
         </button>
       </div>
 
-      <div className="home-greeting">
-        <h1>Oi, Paulo</h1>
-        <p>Sexta-feira · sequência de 5 dias</p>
+      <div>
+        <div className="greet">Oi, Paulo</div>
+        <div className="greet-sub">Sexta-feira · sequência de 4 dias</div>
       </div>
 
-      <div className="home-summary-card">
-        <div className="stat">
-          <span className="stat-value">68%</span>
-          <span className="stat-label">Precisão</span>
+      <div className="summary-card">
+        <div className="ring-wrap">
+          <div className="ring" style={{ '--pct': '.68turn' } as CSSProperties} />
+          <span className="ring-label">68%</span>
         </div>
-        <div className="stat">
-          <span className="stat-value">34</span>
-          <span className="stat-label">Exercícios</span>
-        </div>
-        <div className="stat">
-          <span className="stat-value">5</span>
-          <span className="stat-label">Sequência</span>
+        <div className="summary-stats">
+          <b>34 exercícios</b>
+          <span>Feitos ao todo</span>
+          <b style={{ marginTop: 6 }}>23 corretos</b>
+          <span>68% de acerto</span>
         </div>
       </div>
 
-      <p className="mono-label">Nível médio · continue de onde parou</p>
-
-      <button type="button" className="home-cta">
-        <span>Praticar agora</span>
-        <span aria-hidden="true">›</span>
+      <button type="button" className="cta-practice">
+        <div className="cta-text">
+          <span className="cta-eyebrow">Nível médio · continue de onde parou</span>
+          <span className="cta-title">Praticar agora</span>
+        </div>
+        <ChevronRightIcon className="cta-arrow" />
       </button>
 
-      <nav className="home-nav">
-        {NAV_ITEMS.map((item) => (
-          <button type="button" key={item.label} className="home-nav-row">
-            <span className="home-nav-icon" aria-hidden="true">
-              {item.icon}
-            </span>
-            <span className="home-nav-label">{item.label}</span>
-            <span className="home-nav-chevron" aria-hidden="true">
-              ›
-            </span>
+      <div className="nav-list">
+        {NAV_ITEMS.map(({ Icon, label, stat }) => (
+          <button type="button" key={label} className="nav-row">
+            <Icon />
+            <span className="label">{label}</span>
+            <span className="stat">{stat}</span>
+            <ChevronRightIcon className="chev" />
           </button>
         ))}
-      </nav>
+      </div>
     </main>
   )
 }

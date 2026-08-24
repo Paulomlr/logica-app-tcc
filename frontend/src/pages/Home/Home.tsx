@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   LogoMark,
   GearIcon,
@@ -18,6 +19,8 @@ const NAV_ITEMS = [
 ]
 
 function Home() {
+  const navigate = useNavigate()
+
   return (
     <main className="screen home">
       <div className="home-topbar">
@@ -45,7 +48,7 @@ function Home() {
         </div>
       </div>
 
-      <button type="button" className="cta-practice">
+      <button type="button" className="cta-practice" onClick={() => navigate('/niveis')}>
         <div className="cta-text">
           <span className="cta-eyebrow">Nível médio · continue de onde parou</span>
           <span className="cta-title">Praticar agora</span>

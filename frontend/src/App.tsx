@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Splash from './pages/Splash/Splash'
 import Home from './pages/Home/Home'
 import LevelSelect from './pages/LevelSelect/LevelSelect'
+import Practice from './pages/Practice/Practice'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Route path="/" element={<Splash />} />
       <Route path="/home" element={<Home />} />
       <Route path="/niveis" element={<LevelSelect />} />
+      <Route path="/pratica" element={<Practice />} />
     </Routes>
   )
 }

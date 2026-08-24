@@ -24,7 +24,12 @@ function LevelSelect() {
       </div>
 
       {LEVELS.map((level) => (
-        <button type="button" key={level.name} className="level-card">
+        <button
+          type="button"
+          key={level.name}
+          className="level-card"
+          onClick={() => navigate('/pratica')}
+        >
           <div>
             <div className="lv-name">{level.name}</div>
             <div className="lv-meta">{level.meta}</div>

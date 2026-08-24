@@ -119,6 +119,34 @@ button {
   width: auto;
   padding: 6px;
 }
+table.tt {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+table.tt th {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding: 8px 4px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+table.tt th.fillable {
+  color: var(--accent-strong);
+}
+table.tt td {
+  padding: 5px 4px;
+  text-align: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+.cell-given {
+  color: var(--text-faint);
+}
+
 .hint {
   font-size: 10.5px;
   color: var(--text-faint);

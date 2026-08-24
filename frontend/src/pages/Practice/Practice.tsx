@@ -101,7 +101,11 @@ function Practice() {
       </div>
 
       <div className="practice-bottom">
-        <button type="button" className="btn btn-primary verify-btn" onClick={() => navigate('/resultado')}>
+        <button
+          type="button"
+          className="btn btn-primary verify-btn"
+          onClick={() => navigate('/resultado', { state: { rows: ROWS, answers } })}
+        >
           Verificar
         </button>
       </div>

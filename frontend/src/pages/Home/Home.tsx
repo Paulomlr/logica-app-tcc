@@ -12,10 +12,10 @@ import {
 import './Home.css'
 
 const NAV_ITEMS = [
-  { Icon: BarChartIcon, label: 'Progresso', stat: '68%' },
-  { Icon: FlameIcon, label: 'Sequência', stat: '4 dias' },
-  { Icon: StarIcon, label: 'Conquistas', stat: '3/10' },
-  { Icon: TrophyIcon, label: 'Ranking', stat: '#3' },
+  { Icon: BarChartIcon, label: 'Progresso', stat: '68%', path: '/progresso' },
+  { Icon: FlameIcon, label: 'Sequência', stat: '4 dias', path: null },
+  { Icon: StarIcon, label: 'Conquistas', stat: '3/10', path: null },
+  { Icon: TrophyIcon, label: 'Ranking', stat: '#3', path: null },
 ]
 
 function Home() {
@@ -25,7 +25,12 @@ function Home() {
     <main className="screen home">
       <div className="home-topbar">
         <LogoMark className="brand-mark-sm" />
-        <button type="button" className="gear-btn" aria-label="Configurações">
+        <button
+          type="button"
+          className="gear-btn"
+          aria-label="Configurações"
+          onClick={() => navigate('/configuracoes')}
+        >
           <GearIcon />
         </button>
       </div>
@@ -57,8 +62,14 @@ function Home() {
       </button>
 
       <div className="nav-list">
-        {NAV_ITEMS.map(({ Icon, label, stat }) => (
-          <button type="button" key={label} className="nav-row">
+        {NAV_ITEMS.map(({ Icon, label, stat, path }) => (
+          <button
+            type="button"
+            key={label}
+            className="nav-row"
+            onClick={() => path && navigate(path)}
+            disabled={!path}
+          >
             <Icon />
             <span className="label">{label}</span>
             <span className="stat">{stat}</span>

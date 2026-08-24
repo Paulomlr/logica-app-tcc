@@ -1,0 +1,83 @@
+.progress {
+  padding: 18px 20px 20px;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.progress .ring-wrap {
+  width: 96px;
+  height: 96px;
+  margin: 6px auto 0;
+}
+.progress .ring {
+  width: 96px;
+  height: 96px;
+}
+.progress .ring::after {
+  width: 74px;
+  height: 74px;
+}
+.progress .ring-label {
+  font-size: 20px;
+}
+
+.progress-total {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  text-align: center;
+}
+.progress-total b {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+.progress-total span {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.diff-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.diff-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.diff-row .lbl {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.diff-row .lbl .mono {
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+.diff-track {
+  height: 7px;
+  border-radius: 6px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.diff-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--accent);
+}
+
+.link-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.link-row a {
+  font-size: 12.5px;
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

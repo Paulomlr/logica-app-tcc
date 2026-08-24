@@ -25,36 +25,6 @@
   gap: 16px;
 }
 
-.ring {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  flex: 0 0 auto;
-  background: conic-gradient(var(--accent) 0turn var(--pct, 0.68turn), var(--surface-3) 0turn);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.ring::after {
-  content: '';
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--surface);
-}
-.ring-label {
-  position: absolute;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-}
-.ring-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .summary-stats {
   display: flex;
   flex-direction: column;
@@ -154,6 +124,13 @@
 }
 .nav-row:hover {
   border-color: var(--accent);
+}
+.nav-row:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.nav-row:disabled:hover {
+  border-color: var(--border);
 }
 .nav-row svg:first-child {
   width: 18px;

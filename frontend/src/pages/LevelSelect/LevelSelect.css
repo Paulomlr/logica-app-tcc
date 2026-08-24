@@ -4,44 +4,6 @@
   overflow-y: auto;
 }
 
-.list-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 6px;
-}
-.list-top .back {
-  font-family: var(--font-sans);
-  font-size: 12.5px;
-  color: var(--text-faint);
-  white-space: nowrap;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: none;
-  border: none;
-  padding: 0;
-}
-.list-top .back:hover {
-  color: var(--accent-strong);
-}
-.list-top .titles {
-  display: flex;
-  flex-direction: column;
-}
-.list-top .sub {
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
-
-.screen-title {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 19px;
-}
-
 .level-card {
   background: var(--surface);
   border: 1px solid var(--border);

@@ -5,17 +5,13 @@ import {
   GearIcon,
   ChevronRightIcon,
   BarChartIcon,
-  FlameIcon,
   StarIcon,
-  TrophyIcon,
 } from '../../components/icons/Icons'
 import './Home.css'
 
 const NAV_ITEMS = [
   { Icon: BarChartIcon, label: 'Progresso', stat: '68%', path: '/progresso' },
-  { Icon: FlameIcon, label: 'Sequência', stat: '4 dias', path: null },
   { Icon: StarIcon, label: 'Conquistas', stat: '3/10', path: null },
-  { Icon: TrophyIcon, label: 'Ranking', stat: '#3', path: null },
 ]
 
 function Home() {
@@ -35,10 +31,7 @@ function Home() {
         </button>
       </div>
 
-      <div>
-        <div className="greet">Oi, Paulo</div>
-        <div className="greet-sub">Sexta-feira · sequência de 4 dias</div>
-      </div>
+      <div className="greet">Oi, Paulo</div>
 
       <div className="summary-card">
         <div className="ring-wrap">

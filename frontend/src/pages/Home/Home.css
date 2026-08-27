@@ -9,11 +9,6 @@
   font-weight: 600;
   font-family: var(--font-serif);
 }
-.home .greet-sub {
-  color: var(--text-muted);
-  font-size: 13px;
-  margin-top: 2px;
-}
 
 .summary-card {
   background: linear-gradient(150deg, var(--surface-2), var(--surface));

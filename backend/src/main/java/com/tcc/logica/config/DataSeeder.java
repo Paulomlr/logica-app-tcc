@@ -4,7 +4,7 @@ import com.tcc.logica.achievement.Achievement;
 import com.tcc.logica.achievement.AchievementCodes;
 import com.tcc.logica.achievement.AchievementRepository;
 import com.tcc.logica.exercise.Difficulty;
-import com.tcc.logica.exercise.LogicExercise;
+import com.tcc.logica.exercise.ExerciseGenerationService;
 import com.tcc.logica.exercise.LogicExerciseRepository;
 import com.tcc.logica.user.AppUser;
 import com.tcc.logica.user.AppUserRepository;
@@ -14,25 +14,32 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Seeds a fixed test user and a starter formula bank so the game flow can be
- * built and exercised end to end before Google OAuth2 login exists.
- * TEST_USER_EMAIL is used as a stand-in for "the current user" until then.
+ * Seeds a fixed test user, a starter formula bank, and the achievement catalog
+ * so the game flow can be built and exercised end to end before Google OAuth2
+ * login exists. TEST_USER_EMAIL is used as a stand-in for "the current user"
+ * until then.
  */
 @Component
 public class DataSeeder implements CommandLineRunner {
 
     public static final String TEST_USER_EMAIL = "teste@logica.app";
 
+    /** Predefined starter bank size per level; POST /exercises/generate adds more on demand. */
+    private static final int SEEDED_EXERCISES_PER_DIFFICULTY = 6;
+
     private final AppUserRepository appUserRepository;
     private final LogicExerciseRepository logicExerciseRepository;
     private final AchievementRepository achievementRepository;
+    private final ExerciseGenerationService exerciseGenerationService;
 
     public DataSeeder(AppUserRepository appUserRepository,
                        LogicExerciseRepository logicExerciseRepository,
-                       AchievementRepository achievementRepository) {
+                       AchievementRepository achievementRepository,
+                       ExerciseGenerationService exerciseGenerationService) {
         this.appUserRepository = appUserRepository;
         this.logicExerciseRepository = logicExerciseRepository;
         this.achievementRepository = achievementRepository;
+        this.exerciseGenerationService = exerciseGenerationService;
     }
 
     @Override
@@ -52,17 +59,9 @@ public class DataSeeder implements CommandLineRunner {
         if (logicExerciseRepository.count() > 0) {
             return;
         }
-        List<LogicExercise> exercises = List.of(
-                new LogicExercise("p & q", Difficulty.FACIL),
-                new LogicExercise("p | q", Difficulty.FACIL),
-                new LogicExercise("!p", Difficulty.FACIL),
-                new LogicExercise("(p & q) -> r", Difficulty.MEDIO),
-                new LogicExercise("p -> (q | r)", Difficulty.MEDIO),
-                new LogicExercise("(p | q) & !r", Difficulty.MEDIO),
-                new LogicExercise("(p -> q) <-> (!q -> !p)", Difficulty.DIFICIL),
-                new LogicExercise("((p & q) -> r) & (r -> !s)", Difficulty.DIFICIL)
-        );
-        logicExerciseRepository.saveAll(exercises);
+        for (Difficulty difficulty : Difficulty.values()) {
+            exerciseGenerationService.generate(difficulty, SEEDED_EXERCISES_PER_DIFFICULTY);
+        }
     }
 
     private void seedAchievements() {

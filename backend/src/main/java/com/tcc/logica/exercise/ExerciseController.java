@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/exercises")
 public class ExerciseController {
 
     private static final int MAX_GENERATE_COUNT = 20;
+    private static final Random RANDOM = new Random();
 
     private final LogicExerciseRepository exerciseRepository;
     private final ExerciseAttemptService attemptService;
@@ -39,13 +42,27 @@ public class ExerciseController {
 
     @PostMapping("/generate")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<LogicExercise> generate(@RequestParam Difficulty difficulty,
+    public List<LogicExercise> generate(@RequestParam(required = false) Difficulty difficulty,
                                          @RequestParam(defaultValue = "1") int count) {
         if (count < 1 || count > MAX_GENERATE_COUNT) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "count deve estar entre 1 e " + MAX_GENERATE_COUNT + ".");
         }
+        // No difficulty given -> "surprise challenge": pick one at random per exercise,
+        // instead of generating `count` exercises all at the same random difficulty.
+        if (difficulty == null) {
+            List<LogicExercise> created = new ArrayList<>();
+            for (int i = 0; i < count; i++) {
+                created.addAll(generationService.generate(randomDifficulty(), 1));
+            }
+            return created;
+        }
         return generationService.generate(difficulty, count);
+    }
+
+    private Difficulty randomDifficulty() {
+        Difficulty[] values = Difficulty.values();
+        return values[RANDOM.nextInt(values.length)];
     }
 
     @GetMapping("/{id}/play")

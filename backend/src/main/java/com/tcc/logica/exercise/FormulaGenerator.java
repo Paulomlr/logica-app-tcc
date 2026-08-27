@@ -65,7 +65,10 @@ public final class FormulaGenerator {
                     List.of("p", "q", "r"), 2, 3,
                     List.of(BinaryOperator.AND, BinaryOperator.OR, BinaryOperator.IMPLIES));
             case DIFICIL -> new GenerationRules(
-                    List.of("p", "q", "r", "s"), 4, 6,
+                    List.of("p", "q", "r"), 4, 5,
+                    List.of(BinaryOperator.AND, BinaryOperator.OR, BinaryOperator.IMPLIES, BinaryOperator.IFF));
+            case AVANCADO -> new GenerationRules(
+                    List.of("p", "q", "r"), 6, 8,
                     List.of(BinaryOperator.AND, BinaryOperator.OR, BinaryOperator.IMPLIES, BinaryOperator.IFF));
         };
     }

@@ -31,8 +31,7 @@ class FormulaGeneratorTest {
         Random random = new Random(7);
         int maxAllowedVariables = switch (difficulty) {
             case FACIL -> 2;
-            case MEDIO -> 3;
-            case DIFICIL -> 4;
+            case MEDIO, DIFICIL, AVANCADO -> 3;
         };
 
         for (int i = 0; i < 50; i++) {

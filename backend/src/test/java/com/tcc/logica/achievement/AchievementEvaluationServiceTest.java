@@ -115,6 +115,7 @@ class AchievementEvaluationServiceTest {
         attemptRepository.save(new ExerciseAttempt(user, exercise(Difficulty.FACIL), true, 5));
         attemptRepository.save(new ExerciseAttempt(user, exercise(Difficulty.MEDIO), true, 5));
         attemptRepository.save(new ExerciseAttempt(user, exercise(Difficulty.DIFICIL), true, 5));
+        attemptRepository.save(new ExerciseAttempt(user, exercise(Difficulty.AVANCADO), true, 5));
 
         List<Achievement> unlocked = service.evaluate(user);
 

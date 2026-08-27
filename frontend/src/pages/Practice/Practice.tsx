@@ -1,18 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPlayView, submitAttempt, type ExercisePlayView } from '../../lib/api'
 import './Practice.css'
 
 type CellValue = '' | 'v' | 'f'
-type RowAnswer = { and: CellValue; impl: CellValue }
 type Modal = null | 'exit' | 'clear' | 'incomplete'
-
-const ROWS = [true, false].flatMap((p) =>
-  [true, false].flatMap((q) => [true, false].map((r) => ({ p, q, r }))),
-)
-
-function vf(value: boolean) {
-  return value ? 'V' : 'F'
-}
 
 function formatTime(totalSeconds: number) {
   const m = Math.floor(totalSeconds / 60)
@@ -25,31 +17,67 @@ function nextValue(value: CellValue): CellValue {
 }
 
 function Practice() {
+  const { exerciseId } = useParams()
   const navigate = useNavigate()
+
+  const [play, setPlay] = useState<ExercisePlayView | null>(null)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
   const [seconds, setSeconds] = useState(0)
-  const [answers, setAnswers] = useState<RowAnswer[]>(() => ROWS.map(() => ({ and: '', impl: '' })))
+  const [answers, setAnswers] = useState<CellValue[][]>([])
   const [openModal, setOpenModal] = useState<Modal>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    getPlayView(Number(exerciseId))
+      .then((view) => {
+        if (cancelled) return
+        setPlay(view)
+        const fillableCount = view.columnIsFillable.filter(Boolean).length
+        setAnswers(view.rowAssignments.map(() => Array(fillableCount).fill('')))
+      })
+      .catch((err: Error) => !cancelled && setLoadError(err.message))
+    return () => {
+      cancelled = true
+    }
+  }, [exerciseId])
 
   useEffect(() => {
     const id = setInterval(() => setSeconds((s) => s + 1), 1000)
     return () => clearInterval(id)
   }, [])
 
-  function toggleCell(rowIndex: number, column: 'and' | 'impl') {
+  function toggleCell(rowIndex: number, slot: number) {
     setAnswers((current) =>
-      current.map((row, i) => (i === rowIndex ? { ...row, [column]: nextValue(row[column]) } : row)),
+      current.map((row, r) =>
+        r === rowIndex ? row.map((v, s) => (s === slot ? nextValue(v) : v)) : row,
+      ),
     )
   }
 
   function clearAnswers() {
-    setAnswers(ROWS.map(() => ({ and: '', impl: '' })))
+    setAnswers((current) => current.map((row) => row.map(() => '')))
     setOpenModal(null)
   }
 
-  function goToResult() {
+  async function goToResult() {
+    if (!play) return
     setOpenModal(null)
-    navigate('/resultado', { state: { rows: ROWS, answers } })
+    setSubmitError(null)
+    setSubmitting(true)
+    try {
+      const payload = answers.map((row) => row.map((v) => v === 'v'))
+      const result = await submitAttempt(play.exerciseId, payload, seconds)
+      navigate('/resultado', { state: { play, result, answers, seconds } })
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Não foi possível enviar sua resposta.')
+    } finally {
+      setSubmitting(false)
+    }
   }
+
+  const incompleteCount = answers.flat().filter((v) => v === '').length
 
   function handleVerify() {
     if (incompleteCount > 0) {
@@ -59,10 +87,31 @@ function Practice() {
     }
   }
 
-  const incompleteCount = answers.reduce(
-    (count, a) => count + (a.and === '' ? 1 : 0) + (a.impl === '' ? 1 : 0),
-    0,
-  )
+  if (loadError) {
+    return (
+      <main className="screen practice practice-message">
+        <p>Não foi possível carregar este exercício.</p>
+        <p className="practice-message-detail">{loadError}</p>
+        <button type="button" className="btn btn-ghost" onClick={() => navigate('/niveis')}>
+          Voltar aos níveis
+        </button>
+      </main>
+    )
+  }
+
+  if (!play) {
+    return (
+      <main className="screen practice practice-message">
+        <p>Carregando exercício…</p>
+      </main>
+    )
+  }
+
+  const fillableSlotForColumn: number[] = []
+  let slotCounter = 0
+  for (const isFillable of play.columnIsFillable) {
+    fillableSlotForColumn.push(isFillable ? slotCounter++ : -1)
+  }
 
   return (
     <main className="screen practice">
@@ -70,7 +119,7 @@ function Practice() {
         <button type="button" className="practice-exit" aria-label="Sair" onClick={() => setOpenModal('exit')}>
           ✕
         </button>
-        <span className="formula">(p ∧ q) → r</span>
+        <span className="formula">{play.formula}</span>
         <span className="timer">{formatTime(seconds)}</span>
       </div>
 
@@ -80,41 +129,44 @@ function Practice() {
         </button>
       </div>
 
+      {submitError && <p className="practice-error">{submitError}</p>}
+
       <div className="table-wrap">
         <table className="tt">
           <thead>
             <tr>
-              <th>p</th>
-              <th>q</th>
-              <th className="fillable">p∧q</th>
-              <th>r</th>
-              <th className="fillable">→</th>
+              {play.columnLabels.map((label, c) => (
+                <th key={label} className={play.columnIsFillable[c] ? 'fillable' : undefined}>
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {ROWS.map((row, i) => (
-              <tr key={i}>
-                <td className="cell-given">{vf(row.p)}</td>
-                <td className="cell-given">{vf(row.q)}</td>
-                <td>
-                  <button
-                    type="button"
-                    className={`cell-btn ${answers[i].and}`}
-                    onClick={() => toggleCell(i, 'and')}
-                  >
-                    {answers[i].and ? vf(answers[i].and === 'v') : '–'}
-                  </button>
-                </td>
-                <td className="cell-given">{vf(row.r)}</td>
-                <td>
-                  <button
-                    type="button"
-                    className={`cell-btn ${answers[i].impl}`}
-                    onClick={() => toggleCell(i, 'impl')}
-                  >
-                    {answers[i].impl ? vf(answers[i].impl === 'v') : '–'}
-                  </button>
-                </td>
+            {play.rowAssignments.map((assignment, r) => (
+              <tr key={r}>
+                {play.columnLabels.map((label, c) => {
+                  if (!play.columnIsFillable[c]) {
+                    return (
+                      <td key={label} className="cell-given">
+                        {assignment[label] ? 'V' : 'F'}
+                      </td>
+                    )
+                  }
+                  const slot = fillableSlotForColumn[c]
+                  const value = answers[r]?.[slot] ?? ''
+                  return (
+                    <td key={label}>
+                      <button
+                        type="button"
+                        className={`cell-btn ${value}`}
+                        onClick={() => toggleCell(r, slot)}
+                      >
+                        {value ? (value === 'v' ? 'V' : 'F') : '–'}
+                      </button>
+                    </td>
+                  )
+                })}
               </tr>
             ))}
           </tbody>
@@ -122,8 +174,13 @@ function Practice() {
       </div>
 
       <div className="practice-bottom">
-        <button type="button" className="btn btn-primary verify-btn" onClick={handleVerify}>
-          Verificar
+        <button
+          type="button"
+          className="btn btn-primary verify-btn"
+          onClick={handleVerify}
+          disabled={submitting}
+        >
+          {submitting ? 'Verificando…' : 'Verificar'}
         </button>
       </div>
 

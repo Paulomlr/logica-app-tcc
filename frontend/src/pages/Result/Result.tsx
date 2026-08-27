@@ -1,61 +1,70 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { StarFilledIcon } from '../../components/icons/Icons'
+import type { AttemptResultResponse, ExercisePlayView } from '../../lib/api'
 import './Result.css'
 
 type CellValue = '' | 'v' | 'f'
-type Row = { p: boolean; q: boolean; r: boolean }
-type RowAnswer = { and: CellValue; impl: CellValue }
-type ResultState = { rows: Row[]; answers: RowAnswer[] }
+type ResultState = {
+  play: ExercisePlayView
+  result: AttemptResultResponse
+  answers: CellValue[][]
+  seconds: number
+}
 
 function vf(value: boolean) {
   return value ? 'V' : 'F'
 }
 
-function cellIsCorrect(answer: CellValue, correct: boolean) {
-  if (answer === '') return false
-  return (answer === 'v') === correct
+function formatTime(totalSeconds: number) {
+  const m = Math.floor(totalSeconds / 60)
+  const s = totalSeconds % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
 function Result() {
   const navigate = useNavigate()
   const { state } = useLocation()
-  const { rows, answers } = (state as ResultState | null) ?? { rows: [], answers: [] }
+  const resultState = state as ResultState | null
 
   useEffect(() => {
-    if (rows.length === 0) {
+    if (!resultState) {
       navigate('/pratica', { replace: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (rows.length === 0) {
+  if (!resultState) {
     return null
   }
 
-  const totalCells = rows.length * 2
-  let correctCells = 0
+  const { play, result, answers, seconds } = resultState
 
-  const graded = rows.map((row, i) => {
-    const correctAnd = row.p && row.q
-    const correctImpl = !correctAnd || row.r
-    const andOk = cellIsCorrect(answers[i].and, correctAnd)
-    const implOk = cellIsCorrect(answers[i].impl, correctImpl)
-    if (andOk) correctCells += 1
-    if (implOk) correctCells += 1
-    return {
-      ...row,
-      and: answers[i].and,
-      andOk,
-      impl: answers[i].impl,
-      implOk,
-    }
-  })
+  const fillableSlotForColumn: number[] = []
+  let slotCounter = 0
+  for (const isFillable of play.columnIsFillable) {
+    fillableSlotForColumn.push(isFillable ? slotCounter++ : -1)
+  }
 
-  const allCorrect = correctCells === totalCells
+  const totalCells = result.correctness.reduce((sum, row) => sum + row.length, 0)
+  const correctCells = result.correctness.reduce(
+    (sum, row) => sum + row.filter(Boolean).length,
+    0,
+  )
+
+  const achievement = result.newlyUnlockedAchievements[0]
 
   return (
     <main className="screen result">
+      <div className="list-top">
+        <button type="button" className="back" onClick={() => navigate('/niveis')}>
+          ‹ Nível
+        </button>
+        <div className="titles">
+          <div className="screen-title">Resultado</div>
+        </div>
+      </div>
+
       <div className="result-banner">
         <b>
           {correctCells} de {totalCells} corretas
@@ -66,50 +75,55 @@ function Result() {
       <table className="tt">
         <thead>
           <tr>
-            <th>p</th>
-            <th>q</th>
-            <th>p∧q</th>
-            <th>r</th>
-            <th>→</th>
+            {play.columnLabels.map((label, c) => (
+              <th key={label} className={play.columnIsFillable[c] ? 'fillable' : undefined}>
+                {label}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {graded.map((row, i) => (
-            <tr key={i}>
-              <td className="cell-given">{vf(row.p)}</td>
-              <td className="cell-given">{vf(row.q)}</td>
-              <td className={row.andOk ? 'tag-ok' : 'tag-bad'}>
-                {row.and ? vf(row.and === 'v') : '–'}
-                {!row.andOk && '*'}
-              </td>
-              <td className="cell-given">{vf(row.r)}</td>
-              <td className={row.implOk ? 'tag-ok' : 'tag-bad'}>
-                {row.impl ? vf(row.impl === 'v') : '–'}
-                {!row.implOk && '*'}
-              </td>
+          {play.rowAssignments.map((assignment, r) => (
+            <tr key={r}>
+              {play.columnLabels.map((label, c) => {
+                if (!play.columnIsFillable[c]) {
+                  return (
+                    <td key={label} className="cell-given">
+                      {assignment[label] ? 'V' : 'F'}
+                    </td>
+                  )
+                }
+                const slot = fillableSlotForColumn[c]
+                const isOk = result.correctness[r][slot]
+                const answer = answers[r][slot]
+                return (
+                  <td key={label} className={isOk ? 'tag-ok' : 'tag-bad'}>
+                    {answer ? vf(answer === 'v') : '–'}
+                    {!isOk && '*'}
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
       </table>
 
-      {allCorrect && (
+      {achievement && (
         <div className="achieve-card">
           <div className="achieve-badge">
             <StarFilledIcon />
           </div>
           <div>
-            <b>Conquista: Primeira vitória</b>
-            <span>1º exercício correto</span>
+            <b>Conquista: {achievement.title}</b>
+            <span>{achievement.description}</span>
           </div>
         </div>
       )}
 
-      <div className="score-line">
-        +{correctCells} pontos · dificuldade média
-      </div>
+      <div className="score-line">Tempo: {formatTime(seconds)}</div>
 
       <div className="actions">
-        <button type="button" className="btn btn-primary" onClick={() => navigate('/pratica')}>
+        <button type="button" className="btn btn-primary" onClick={() => navigate('/niveis')}>
           Próximo exercício
         </button>
         <button type="button" className="btn btn-ghost" onClick={() => navigate('/niveis')}>

@@ -13,7 +13,7 @@ function App() {
       <Route path="/" element={<Splash />} />
       <Route path="/home" element={<Home />} />
       <Route path="/niveis" element={<LevelSelect />} />
-      <Route path="/pratica" element={<Practice />} />
+      <Route path="/pratica/:exerciseId" element={<Practice />} />
       <Route path="/resultado" element={<Result />} />
       <Route path="/progresso" element={<Progress />} />
       <Route path="/configuracoes" element={<Settings />} />

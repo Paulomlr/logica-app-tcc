@@ -1,16 +1,53 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { generateExercise, listExercises, type Difficulty } from '../../lib/api'
 import './LevelSelect.css'
 
-const LEVELS = [
-  { name: 'Fácil', meta: '2 variáveis · 1 operador', formula: 'p → q', dot: 'l1' },
-  { name: 'Médio', meta: '3 variáveis · 2–3 operadores', formula: '(p ∧ q) → r', dot: 'l2' },
-  { name: 'Difícil', meta: '4 variáveis · 4–6 operadores', formula: '(p∧q)→(r↔¬s)', dot: 'l3' },
-  { name: 'Avançado', meta: '5 variáveis · 5–7 operadores', formula: '(p∧q)→(r↔(s∨t))', dot: 'l4' },
-  { name: 'Mestre', meta: '6 variáveis · 6–8 operadores', formula: '((p→q)∧r)↔(¬s∨(t∧u))', dot: 'l5' },
+const LEVELS: { difficulty: Difficulty; name: string; meta: string; dot: string }[] = [
+  { difficulty: 'FACIL', name: 'Fácil', meta: '1 operador · ∧, ∨', dot: 'l1' },
+  { difficulty: 'MEDIO', name: 'Médio', meta: '2–3 operadores · ∧, ∨, →', dot: 'l2' },
+  { difficulty: 'DIFICIL', name: 'Difícil', meta: '4–5 operadores · ∧, ∨, →, ↔', dot: 'l3' },
+  { difficulty: 'AVANCADO', name: 'Avançado', meta: '6–8 operadores · todos', dot: 'l4' },
 ]
+
+function pickRandom<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)]
+}
 
 function LevelSelect() {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState<Difficulty | 'random' | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  async function playLevel(difficulty: Difficulty) {
+    setError(null)
+    setLoading(difficulty)
+    try {
+      let exercises = await listExercises(difficulty)
+      if (exercises.length === 0) {
+        exercises = await generateExercise(difficulty)
+      }
+      const exercise = pickRandom(exercises)
+      navigate(`/pratica/${exercise.id}`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível carregar exercícios.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  async function generateRandomChallenge() {
+    setError(null)
+    setLoading('random')
+    try {
+      const [exercise] = await generateExercise(null)
+      navigate(`/pratica/${exercise.id}`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível gerar um desafio.')
+    } finally {
+      setLoading(null)
+    }
+  }
 
   return (
     <main className="screen levels">
@@ -23,27 +60,36 @@ function LevelSelect() {
         </div>
       </div>
 
+      {error && <p className="levels-error">{error}</p>}
+
       {LEVELS.map((level) => (
         <button
           type="button"
-          key={level.name}
+          key={level.difficulty}
           className="level-card"
-          onClick={() => navigate('/pratica')}
+          disabled={loading !== null}
+          onClick={() => playLevel(level.difficulty)}
         >
           <div>
             <div className="lv-name">{level.name}</div>
-            <div className="lv-meta">{level.meta}</div>
-            <div className="lv-formula">{level.formula}</div>
+            <div className="lv-meta">
+              {loading === level.difficulty ? 'Carregando…' : level.meta}
+            </div>
           </div>
           <div className={`lv-dot ${level.dot}`} />
         </button>
       ))}
 
       <div className="level-footer">
-        <button type="button" className="btn btn-ghost">
-          ↻ Gerar novo desafio
+        <button
+          type="button"
+          className="btn btn-ghost"
+          disabled={loading !== null}
+          onClick={generateRandomChallenge}
+        >
+          {loading === 'random' ? 'Gerando…' : '↻ Gerar novo desafio'}
         </button>
-        <p className="hint">Cria uma fórmula nova nesse nível, além do banco de exercícios prontos</p>
+        <p className="hint">Sorteia a dificuldade e a fórmula, de Fácil a Avançado</p>
       </div>
     </main>
   )

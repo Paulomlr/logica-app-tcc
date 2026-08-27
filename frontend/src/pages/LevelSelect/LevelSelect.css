@@ -21,6 +21,13 @@
 .level-card:hover {
   border-color: var(--accent);
 }
+.level-card:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.level-card:disabled:hover {
+  border-color: var(--border);
+}
 .level-card .lv-name {
   font-weight: 600;
   font-size: 15px;
@@ -62,4 +69,14 @@
 
 .level-footer {
   margin-top: auto;
+}
+
+.levels-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--false) 16%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--false) 45%, var(--border));
+  color: var(--false);
+  font-size: 12.5px;
 }

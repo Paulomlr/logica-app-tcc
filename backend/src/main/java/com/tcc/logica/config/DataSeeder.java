@@ -1,17 +1,16 @@
 package com.tcc.logica.config;
 
-import com.tcc.logica.achievement.Achievement;
-import com.tcc.logica.achievement.AchievementCodes;
-import com.tcc.logica.achievement.AchievementRepository;
-import com.tcc.logica.exercise.Difficulty;
-import com.tcc.logica.exercise.ExerciseGenerationService;
-import com.tcc.logica.exercise.LogicExerciseRepository;
-import com.tcc.logica.user.AppUser;
-import com.tcc.logica.user.AppUserRepository;
+import com.tcc.logica.entity.Achievement;
+import com.tcc.logica.entity.AppUser;
+import com.tcc.logica.model.AchievementCodes;
+import com.tcc.logica.model.Difficulty;
+import com.tcc.logica.repository.AchievementRepository;
+import com.tcc.logica.repository.AppUserRepository;
+import com.tcc.logica.repository.LogicExerciseRepository;
+import com.tcc.logica.service.ExerciseGenerationService;
+import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Seeds a fixed test user, a starter formula bank, and the achievement catalog

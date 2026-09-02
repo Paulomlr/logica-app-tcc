@@ -84,54 +84,55 @@ function Result() {
       </div>
 
       <div
-        className={`table-wrap${play.columnLabels.length > 5 ? ' scrollable' : ''}${scrolledToEnd ? ' at-end' : ''}`}
-        onScroll={handleTableScroll}
+        className={`table-outer${play.columnLabels.length > 5 ? ' scrollable' : ''}${scrolledToEnd ? ' at-end' : ''}`}
       >
-        <table className="tt">
-          <thead>
-            <tr>
-              {displayColumns.map((c, pos) => {
-                const label = play.columnLabels[c]
-                const pin = pinnedColumnProps(pos, givenCount, play.columnIsFillable[c] ? 'fillable' : undefined)
-                return (
-                  <th key={label} className={pin.className} style={pin.style}>
-                    {label}
-                  </th>
-                )
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {play.rowAssignments.map((assignment, r) => (
-              <tr key={r}>
+        <div className="table-wrap" onScroll={handleTableScroll}>
+          <table className="tt">
+            <thead>
+              <tr>
                 {displayColumns.map((c, pos) => {
                   const label = play.columnLabels[c]
-                  const pin = pinnedColumnProps(pos, givenCount)
-                  if (!play.columnIsFillable[c]) {
-                    return (
-                      <td key={label} className={['cell-given', pin.className].filter(Boolean).join(' ')} style={pin.style}>
-                        {assignment[label] ? 'V' : 'F'}
-                      </td>
-                    )
-                  }
-                  const slot = fillableSlotForColumn[c]
-                  const isOk = result.correctness[r][slot]
-                  const answer = answers[r][slot]
+                  const pin = pinnedColumnProps(pos, givenCount, play.columnIsFillable[c] ? 'fillable' : undefined)
                   return (
-                    <td
-                      key={label}
-                      className={[isOk ? 'tag-ok' : 'tag-bad', pin.className].filter(Boolean).join(' ')}
-                      style={pin.style}
-                    >
-                      {answer ? vf(answer === 'v') : '–'}
-                      {!isOk && '*'}
-                    </td>
+                    <th key={label} className={pin.className} style={pin.style}>
+                      {label}
+                    </th>
                   )
                 })}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {play.rowAssignments.map((assignment, r) => (
+                <tr key={r}>
+                  {displayColumns.map((c, pos) => {
+                    const label = play.columnLabels[c]
+                    const pin = pinnedColumnProps(pos, givenCount)
+                    if (!play.columnIsFillable[c]) {
+                      return (
+                        <td key={label} className={['cell-given', pin.className].filter(Boolean).join(' ')} style={pin.style}>
+                          {assignment[label] ? 'V' : 'F'}
+                        </td>
+                      )
+                    }
+                    const slot = fillableSlotForColumn[c]
+                    const isOk = result.correctness[r][slot]
+                    const answer = answers[r][slot]
+                    return (
+                      <td
+                        key={label}
+                        className={[isOk ? 'tag-ok' : 'tag-bad', pin.className].filter(Boolean).join(' ')}
+                        style={pin.style}
+                      >
+                        {answer ? vf(answer === 'v') : '–'}
+                        {!isOk && '*'}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {play.columnLabels.length > 5 && (

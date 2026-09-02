@@ -20,11 +20,13 @@
   color: var(--text-muted);
 }
 
-.result .table-wrap {
-  overflow-x: auto;
+.result .table-outer {
   position: relative;
 }
-.result .table-wrap.scrollable::after {
+.result .table-wrap {
+  overflow-x: auto;
+}
+.result .table-outer.scrollable::after {
   content: '';
   position: absolute;
   top: 0;
@@ -37,7 +39,7 @@
   opacity: 1;
   transition: opacity 0.15s ease;
 }
-.result .table-wrap.scrollable.at-end::after {
+.result .table-outer.at-end::after {
   opacity: 0;
 }
 .result table.tt td {

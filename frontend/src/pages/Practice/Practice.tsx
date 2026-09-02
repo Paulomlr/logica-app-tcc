@@ -17,6 +17,12 @@ function nextValue(value: CellValue): CellValue {
   return value === 'v' ? 'f' : 'v'
 }
 
+function formulaFontSize(formula: string) {
+  if (formula.length > 40) return 11.5
+  if (formula.length > 24) return 13
+  return 15
+}
+
 function Practice() {
   const { exerciseId } = useParams()
   const navigate = useNavigate()
@@ -119,11 +125,17 @@ function Practice() {
   return (
     <main className="screen practice">
       <div className="practice-top">
-        <button type="button" className="practice-exit" aria-label="Sair" onClick={() => setOpenModal('exit')}>
-          ✕
-        </button>
-        <span className="formula">{play.formula}</span>
-        <span className="timer">{formatTime(seconds)}</span>
+        <div className="practice-top-row">
+          <button type="button" className="practice-exit" aria-label="Sair" onClick={() => setOpenModal('exit')}>
+            ✕
+          </button>
+          <span className="timer">{formatTime(seconds)}</span>
+        </div>
+        <div className="formula-wrap">
+          <span className="formula" style={{ fontSize: formulaFontSize(play.formula) }}>
+            {play.formula}
+          </span>
+        </div>
       </div>
 
       <div className="practice-sub">

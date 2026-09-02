@@ -27,11 +27,13 @@
 
 .practice-top {
   padding: 14px 18px 10px;
+  flex: 0 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.practice-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: 0 0 auto;
-  border-bottom: 1px solid var(--border);
   gap: 10px;
 }
 .practice-exit {
@@ -46,11 +48,15 @@
 .practice-exit:hover {
   color: var(--false);
 }
+.formula-wrap {
+  margin-top: 10px;
+  overflow-x: auto;
+}
 .practice-top .formula {
+  display: block;
   font-family: var(--font-mono);
-  font-size: 15px;
-  flex: 1;
   text-align: center;
+  white-space: nowrap;
 }
 .practice-top .timer {
   font-family: var(--font-mono);

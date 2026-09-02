@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { StarFilledIcon } from '../../components/icons/Icons'
 import type { AttemptResultResponse, ExercisePlayView } from '../../lib/api'
+import { getDisplayColumns, pinnedColumnProps } from '../../lib/tableColumns'
 import './Result.css'
 
 type CellValue = '' | 'v' | 'f'
@@ -46,6 +47,8 @@ function Result() {
     fillableSlotForColumn.push(isFillable ? slotCounter++ : -1)
   }
 
+  const { order: displayColumns, givenCount } = getDisplayColumns(play)
+
   const totalCells = result.correctness.reduce((sum, row) => sum + row.length, 0)
   const correctCells = result.correctness.reduce(
     (sum, row) => sum + row.filter(Boolean).length,
@@ -80,20 +83,26 @@ function Result() {
         <table className="tt">
           <thead>
             <tr>
-              {play.columnLabels.map((label, c) => (
-                <th key={label} className={play.columnIsFillable[c] ? 'fillable' : undefined}>
-                  {label}
-                </th>
-              ))}
+              {displayColumns.map((c, pos) => {
+                const label = play.columnLabels[c]
+                const pin = pinnedColumnProps(pos, givenCount, play.columnIsFillable[c] ? 'fillable' : undefined)
+                return (
+                  <th key={label} className={pin.className} style={pin.style}>
+                    {label}
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           <tbody>
             {play.rowAssignments.map((assignment, r) => (
               <tr key={r}>
-                {play.columnLabels.map((label, c) => {
+                {displayColumns.map((c, pos) => {
+                  const label = play.columnLabels[c]
+                  const pin = pinnedColumnProps(pos, givenCount)
                   if (!play.columnIsFillable[c]) {
                     return (
-                      <td key={label} className="cell-given">
+                      <td key={label} className={['cell-given', pin.className].filter(Boolean).join(' ')} style={pin.style}>
                         {assignment[label] ? 'V' : 'F'}
                       </td>
                     )
@@ -102,7 +111,11 @@ function Result() {
                   const isOk = result.correctness[r][slot]
                   const answer = answers[r][slot]
                   return (
-                    <td key={label} className={isOk ? 'tag-ok' : 'tag-bad'}>
+                    <td
+                      key={label}
+                      className={[isOk ? 'tag-ok' : 'tag-bad', pin.className].filter(Boolean).join(' ')}
+                      style={pin.style}
+                    >
                       {answer ? vf(answer === 'v') : '–'}
                       {!isOk && '*'}
                     </td>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPlayView, submitAttempt, type ExercisePlayView } from '../../lib/api'
+import { getDisplayColumns, pinnedColumnProps } from '../../lib/tableColumns'
 import './Practice.css'
 
 type CellValue = '' | 'v' | 'f'
@@ -113,6 +114,8 @@ function Practice() {
     fillableSlotForColumn.push(isFillable ? slotCounter++ : -1)
   }
 
+  const { order: displayColumns, givenCount } = getDisplayColumns(play)
+
   return (
     <main className="screen practice">
       <div className="practice-top">
@@ -139,20 +142,26 @@ function Practice() {
         <table className="tt">
           <thead>
             <tr>
-              {play.columnLabels.map((label, c) => (
-                <th key={label} className={play.columnIsFillable[c] ? 'fillable' : undefined}>
-                  {label}
-                </th>
-              ))}
+              {displayColumns.map((c, pos) => {
+                const label = play.columnLabels[c]
+                const pin = pinnedColumnProps(pos, givenCount, play.columnIsFillable[c] ? 'fillable' : undefined)
+                return (
+                  <th key={label} className={pin.className} style={pin.style}>
+                    {label}
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           <tbody>
             {play.rowAssignments.map((assignment, r) => (
               <tr key={r}>
-                {play.columnLabels.map((label, c) => {
+                {displayColumns.map((c, pos) => {
+                  const label = play.columnLabels[c]
+                  const pin = pinnedColumnProps(pos, givenCount)
                   if (!play.columnIsFillable[c]) {
                     return (
-                      <td key={label} className="cell-given">
+                      <td key={label} className={['cell-given', pin.className].filter(Boolean).join(' ')} style={pin.style}>
                         {assignment[label] ? 'V' : 'F'}
                       </td>
                     )
@@ -160,7 +169,7 @@ function Practice() {
                   const slot = fillableSlotForColumn[c]
                   const value = answers[r]?.[slot] ?? ''
                   return (
-                    <td key={label}>
+                    <td key={label} className={pin.className} style={pin.style}>
                       <button
                         type="button"
                         className={`cell-btn ${value}`}

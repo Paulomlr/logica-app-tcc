@@ -91,6 +91,17 @@
   margin: 0 12px;
   position: relative;
 }
+.table-wrap.scrollable::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  background: linear-gradient(to right, transparent, var(--bg));
+  pointer-events: none;
+  z-index: 4;
+}
 
 .cell-btn {
   width: 30px;

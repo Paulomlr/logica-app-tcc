@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { StarFilledIcon } from '../../components/icons/Icons'
 import type { AttemptResultResponse, ExercisePlayView } from '../../lib/api'
@@ -27,6 +27,7 @@ function Result() {
   const navigate = useNavigate()
   const { state } = useLocation()
   const resultState = state as ResultState | null
+  const [hasScrolled, setHasScrolled] = useState(false)
 
   useEffect(() => {
     if (!resultState) {
@@ -75,14 +76,10 @@ function Result() {
         <span>Revisão célula a célula abaixo</span>
       </div>
 
-      {play.columnLabels.length > 5 && (
-        <>
-          <p className="hint">◂ arraste a tabela para o lado para ver todas as colunas ▸</p>
-          <p className="hint rotate-hint">⟳ gire o celular para paisagem para ver mais colunas de uma vez</p>
-        </>
-      )}
-
-      <div className="table-wrap">
+      <div
+        className={`table-wrap${play.columnLabels.length > 5 ? ' scrollable' : ''}`}
+        onScroll={() => setHasScrolled(true)}
+      >
         <table className="tt">
           <thead>
             <tr>
@@ -129,6 +126,10 @@ function Result() {
           </tbody>
         </table>
       </div>
+
+      {play.columnLabels.length > 5 && !hasScrolled && (
+        <p className="hint">◂ arraste ou gire o celular ▸</p>
+      )}
 
       {achievement && (
         <div className="achieve-card">

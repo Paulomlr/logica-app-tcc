@@ -34,6 +34,7 @@ function Practice() {
   const [seconds, setSeconds] = useState(0)
   const [answers, setAnswers] = useState<CellValue[][]>([])
   const [openModal, setOpenModal] = useState<Modal>(null)
+  const [hasScrolled, setHasScrolled] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -146,14 +147,7 @@ function Practice() {
 
       {submitError && <p className="practice-error">{submitError}</p>}
 
-      {play.columnLabels.length > 5 && (
-        <>
-          <p className="hint">◂ arraste a tabela para o lado para ver todas as colunas ▸</p>
-          <p className="hint rotate-hint">⟳ gire o celular para paisagem para ver mais colunas de uma vez</p>
-        </>
-      )}
-
-      <div className="table-wrap">
+      <div className={`table-wrap${play.columnLabels.length > 5 ? ' scrollable' : ''}`} onScroll={() => setHasScrolled(true)}>
         <table className="tt">
           <thead>
             <tr>
@@ -200,6 +194,10 @@ function Practice() {
           </tbody>
         </table>
       </div>
+
+      {play.columnLabels.length > 5 && !hasScrolled && (
+        <p className="hint">◂ arraste ou gire o celular ▸</p>
+      )}
 
       <div className="practice-bottom">
         <button

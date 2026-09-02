@@ -22,6 +22,18 @@
 
 .result .table-wrap {
   overflow-x: auto;
+  position: relative;
+}
+.result .table-wrap.scrollable::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  background: linear-gradient(to right, transparent, var(--bg));
+  pointer-events: none;
+  z-index: 4;
 }
 .result table.tt td {
   border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);

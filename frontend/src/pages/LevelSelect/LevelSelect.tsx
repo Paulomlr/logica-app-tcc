@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Formula from '../../components/Formula'
 import { generateExercise } from '../../lib/api'
 import { LEVELS } from '../../lib/levels'
 import './LevelSelect.css'
@@ -45,7 +46,9 @@ function LevelSelect() {
         >
           <div>
             <div className="lv-name">{level.name}</div>
-            <div className="lv-meta">{level.meta}</div>
+            <div className="lv-meta">
+              <Formula text={level.meta} />
+            </div>
           </div>
           <div className={`lv-dot ${level.dot}`} />
         </button>

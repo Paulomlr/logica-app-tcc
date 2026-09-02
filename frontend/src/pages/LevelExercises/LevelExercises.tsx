@@ -49,7 +49,9 @@ function LevelExercises() {
         </button>
         <div className="titles">
           <div className="screen-title">{level.name}</div>
-          <div className="sub">{level.meta}</div>
+          <div className="sub">
+            <Formula text={level.meta} />
+          </div>
         </div>
       </div>
 

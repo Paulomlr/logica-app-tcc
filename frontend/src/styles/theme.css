@@ -310,17 +310,25 @@ table.tt td.given-col-last {
   color: var(--text-faint);
 }
 
+.op-icon {
+  overflow: visible;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
 .op-iff {
-  display: inline-block;
-  font-size: 1.17em;
-  line-height: 1;
-  vertical-align: -0.06em;
+  width: 1.05em;
+  height: 0.62em;
+  margin: 0 0.02em;
+  transform: translateY(-0.03em);
 }
 .op-not {
-  display: inline-block;
-  font-size: 1.7em;
-  line-height: 1;
-  vertical-align: -0.05em;
+  width: 0.68em;
+  height: 0.58em;
+  transform: translateY(-0.02em);
 }
 
 .hint {

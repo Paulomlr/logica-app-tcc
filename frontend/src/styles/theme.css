@@ -57,6 +57,17 @@ body {
   position: relative;
 }
 
+/* The 480px cap keeps every screen phone-width even on desktop, but that
+   also throws away the extra room a phone gains by rotating - so the two
+   table-heavy screens drop the cap in phone landscape (short viewport
+   height rules out desktop/tablet landscape windows). */
+@media (orientation: landscape) and (max-height: 500px) {
+  .screen.practice,
+  .screen.result {
+    max-width: 100%;
+  }
+}
+
 .modal-backdrop {
   position: absolute;
   inset: 0;

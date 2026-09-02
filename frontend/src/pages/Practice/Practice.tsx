@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type UIEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPlayView, submitAttempt, type ExercisePlayView } from '../../lib/api'
 import { getDisplayColumns, pinnedColumnProps } from '../../lib/tableColumns'
@@ -35,6 +35,13 @@ function Practice() {
   const [answers, setAnswers] = useState<CellValue[][]>([])
   const [openModal, setOpenModal] = useState<Modal>(null)
   const [hasScrolled, setHasScrolled] = useState(false)
+  const [scrolledToEnd, setScrolledToEnd] = useState(false)
+
+  function handleTableScroll(e: UIEvent<HTMLDivElement>) {
+    setHasScrolled(true)
+    const el = e.currentTarget
+    setScrolledToEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2)
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -147,7 +154,10 @@ function Practice() {
 
       {submitError && <p className="practice-error">{submitError}</p>}
 
-      <div className={`table-wrap${play.columnLabels.length > 5 ? ' scrollable' : ''}`} onScroll={() => setHasScrolled(true)}>
+      <div
+        className={`table-wrap${play.columnLabels.length > 5 ? ' scrollable' : ''}${scrolledToEnd ? ' at-end' : ''}`}
+        onScroll={handleTableScroll}
+      >
         <table className="tt">
           <thead>
             <tr>
@@ -195,8 +205,8 @@ function Practice() {
         </table>
       </div>
 
-      {play.columnLabels.length > 5 && !hasScrolled && (
-        <p className="hint">◂ arraste ou gire o celular ▸</p>
+      {play.columnLabels.length > 5 && (
+        <p className={`hint${hasScrolled ? ' hint-hidden' : ''}`}>◂ arraste ou gire o celular ▸</p>
       )}
 
       <div className="practice-bottom">

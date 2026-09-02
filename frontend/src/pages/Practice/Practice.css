@@ -101,6 +101,11 @@
   background: linear-gradient(to right, transparent, var(--bg));
   pointer-events: none;
   z-index: 4;
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+.table-wrap.scrollable.at-end::after {
+  opacity: 0;
 }
 
 .cell-btn {

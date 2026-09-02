@@ -20,6 +20,9 @@
   color: var(--text-muted);
 }
 
+.result .table-wrap {
+  overflow-x: auto;
+}
 .result table.tt td {
   border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
 }

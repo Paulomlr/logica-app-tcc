@@ -72,41 +72,47 @@ function Result() {
         <span>Revisão célula a célula abaixo</span>
       </div>
 
-      <table className="tt">
-        <thead>
-          <tr>
-            {play.columnLabels.map((label, c) => (
-              <th key={label} className={play.columnIsFillable[c] ? 'fillable' : undefined}>
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {play.rowAssignments.map((assignment, r) => (
-            <tr key={r}>
-              {play.columnLabels.map((label, c) => {
-                if (!play.columnIsFillable[c]) {
+      {play.columnLabels.length > 5 && (
+        <p className="hint">◂ arraste a tabela para o lado para ver todas as colunas ▸</p>
+      )}
+
+      <div className="table-wrap">
+        <table className="tt">
+          <thead>
+            <tr>
+              {play.columnLabels.map((label, c) => (
+                <th key={label} className={play.columnIsFillable[c] ? 'fillable' : undefined}>
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {play.rowAssignments.map((assignment, r) => (
+              <tr key={r}>
+                {play.columnLabels.map((label, c) => {
+                  if (!play.columnIsFillable[c]) {
+                    return (
+                      <td key={label} className="cell-given">
+                        {assignment[label] ? 'V' : 'F'}
+                      </td>
+                    )
+                  }
+                  const slot = fillableSlotForColumn[c]
+                  const isOk = result.correctness[r][slot]
+                  const answer = answers[r][slot]
                   return (
-                    <td key={label} className="cell-given">
-                      {assignment[label] ? 'V' : 'F'}
+                    <td key={label} className={isOk ? 'tag-ok' : 'tag-bad'}>
+                      {answer ? vf(answer === 'v') : '–'}
+                      {!isOk && '*'}
                     </td>
                   )
-                }
-                const slot = fillableSlotForColumn[c]
-                const isOk = result.correctness[r][slot]
-                const answer = answers[r][slot]
-                return (
-                  <td key={label} className={isOk ? 'tag-ok' : 'tag-bad'}>
-                    {answer ? vf(answer === 'v') : '–'}
-                    {!isOk && '*'}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {achievement && (
         <div className="achieve-card">

@@ -254,19 +254,22 @@ table.tt th {
   position: sticky;
   top: 0;
   background: var(--bg);
-  padding: 8px 4px;
+  padding: 8px 10px;
   font-weight: 600;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
   font-size: 12px;
+  white-space: nowrap;
+  min-width: 40px;
 }
 table.tt th.fillable {
   color: var(--accent-strong);
 }
 table.tt td {
-  padding: 5px 4px;
+  padding: 6px 10px;
   text-align: center;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  white-space: nowrap;
 }
 .cell-given {
   color: var(--text-faint);

@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { ExercisePlayView } from './api'
 
-export const GIVEN_COL_WIDTH = 44
+export const GIVEN_COL_WIDTH = 32
 
 /**
  * Column order from the backend interleaves "given" (variable) columns among

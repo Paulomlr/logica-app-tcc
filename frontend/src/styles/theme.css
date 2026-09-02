@@ -293,6 +293,8 @@ table.tt td.given-col {
   position: sticky;
   left: 0;
   background: var(--bg);
+  padding-left: 4px;
+  padding-right: 4px;
 }
 table.tt th.given-col {
   z-index: 3;

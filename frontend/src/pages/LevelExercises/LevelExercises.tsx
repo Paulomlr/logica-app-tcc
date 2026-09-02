@@ -63,7 +63,7 @@ function LevelExercises() {
             className="level-card"
             onClick={() => navigate(`/pratica/${exercise.id}`)}
           >
-            <div>
+            <div className="lv-info">
               <div className="lv-name">Exercício {index + 1}</div>
               <div className="lv-formula">{exercise.formula}</div>
             </div>

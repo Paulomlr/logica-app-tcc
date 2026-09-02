@@ -28,6 +28,10 @@
 .level-card:disabled:hover {
   border-color: var(--border);
 }
+.level-card .lv-info {
+  flex: 1;
+  min-width: 0;
+}
 .level-card .lv-name {
   font-weight: 600;
   font-size: 15px;
@@ -42,6 +46,9 @@
   font-size: 12px;
   color: var(--accent-strong);
   margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lv-dot {

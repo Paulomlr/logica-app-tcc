@@ -313,22 +313,34 @@ table.tt td.given-col-last {
 .op-icon {
   overflow: visible;
   stroke: currentColor;
-  stroke-width: 1.6;
+  stroke-width: 2.2;
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
   vertical-align: middle;
 }
-.op-iff {
-  width: 1.05em;
+.op-and,
+.op-or {
+  width: 0.62em;
   height: 0.62em;
+  margin: 0 0.02em;
+}
+.op-not {
+  width: 0.44em;
+  height: 0.44em;
+  transform: translateY(-0.02em);
+}
+.op-implies {
+  width: 0.79em;
+  height: 0.5em;
   margin: 0 0.02em;
   transform: translateY(-0.03em);
 }
-.op-not {
-  width: 0.68em;
-  height: 0.58em;
-  transform: translateY(-0.02em);
+.op-iff {
+  width: 0.86em;
+  height: 0.5em;
+  margin: 0 0.02em;
+  transform: translateY(-0.03em);
 }
 
 .hint {

@@ -135,7 +135,10 @@ function Practice() {
       {submitError && <p className="practice-error">{submitError}</p>}
 
       {play.columnLabels.length > 5 && (
-        <p className="hint">◂ arraste a tabela para o lado para ver todas as colunas ▸</p>
+        <>
+          <p className="hint">◂ arraste a tabela para o lado para ver todas as colunas ▸</p>
+          <p className="hint rotate-hint">⟳ gire o celular para paisagem para ver mais colunas de uma vez</p>
+        </>
       )}
 
       <div className="table-wrap">

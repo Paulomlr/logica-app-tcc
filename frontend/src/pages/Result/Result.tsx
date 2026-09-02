@@ -1,5 +1,6 @@
 import { useEffect, useState, type UIEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import Formula from '../../components/Formula'
 import { StarFilledIcon } from '../../components/icons/Icons'
 import type { AttemptResultResponse, ExercisePlayView } from '../../lib/api'
 import { getDisplayColumns, pinnedColumnProps } from '../../lib/tableColumns'
@@ -95,7 +96,7 @@ function Result() {
                   const pin = pinnedColumnProps(pos, givenCount, play.columnIsFillable[c] ? 'fillable' : undefined)
                   return (
                     <th key={label} className={pin.className} style={pin.style}>
-                      {label}
+                      <Formula text={label} />
                     </th>
                   )
                 })}

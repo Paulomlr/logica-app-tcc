@@ -310,6 +310,13 @@ table.tt td.given-col-last {
   color: var(--text-faint);
 }
 
+.op-iff {
+  display: inline-block;
+  font-size: 1.3em;
+  line-height: 1;
+  vertical-align: -0.12em;
+}
+
 .hint {
   font-size: 10.5px;
   color: var(--text-faint);

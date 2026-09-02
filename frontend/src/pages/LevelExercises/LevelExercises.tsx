@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import Formula from '../../components/Formula'
 import { generateExercise, listExercises, type Difficulty, type LogicExercise } from '../../lib/api'
 import { findLevel } from '../../lib/levels'
 
@@ -65,7 +66,9 @@ function LevelExercises() {
           >
             <div className="lv-info">
               <div className="lv-name">Exercício {index + 1}</div>
-              <div className="lv-formula">{exercise.formula}</div>
+              <div className="lv-formula">
+                <Formula text={exercise.formula} />
+              </div>
             </div>
             <div className={`lv-dot ${level.dot}`} />
           </button>

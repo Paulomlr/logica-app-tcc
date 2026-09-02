@@ -1,5 +1,6 @@
 import { useEffect, useState, type UIEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import Formula from '../../components/Formula'
 import { getPlayView, submitAttempt, type ExercisePlayView } from '../../lib/api'
 import { getDisplayColumns, pinnedColumnProps } from '../../lib/tableColumns'
 import './Practice.css'
@@ -141,7 +142,7 @@ function Practice() {
         </div>
         <div className="formula-wrap">
           <span className="formula" style={{ fontSize: formulaFontSize(play.formula) }}>
-            {play.formula}
+            <Formula text={play.formula} />
           </span>
         </div>
       </div>
@@ -166,7 +167,7 @@ function Practice() {
                   const pin = pinnedColumnProps(pos, givenCount, play.columnIsFillable[c] ? 'fillable' : undefined)
                   return (
                     <th key={label} className={pin.className} style={pin.style}>
-                      {label}
+                      <Formula text={label} />
                     </th>
                   )
                 })}
